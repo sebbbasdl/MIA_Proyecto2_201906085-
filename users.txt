@@ -1,0 +1,4 @@
+1,G,root
+1,U,root,root,123
+2,G,grupo1
+0,U,grupo1,usuario1,321
