@@ -1,2 +1,4 @@
+github.com/dominikbraun/graph v0.13.0 h1:SltOWHEF51U3J5PvSmvmGJPpZ3XrlXIutoxKRzU0gx0=
+github.com/dominikbraun/graph v0.13.0/go.mod h1:yOjYyogZLY1LSG9E33JWZJiq5k83Qy2C6POAuiViluc=
 github.com/rs/cors v1.8.2 h1:KCooALfAYGs415Cwu5ABvv9n9509fSiG5SQJn/AQo4U=
 github.com/rs/cors v1.8.2/go.mod h1:XyqrcTp5zjWr1wsJ8PIRZssZ8b/WMcMf71DJnit4EMU=

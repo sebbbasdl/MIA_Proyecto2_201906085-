@@ -6,7 +6,7 @@ mkdisk -size=15 -unit="m" -path="C:/Users/sebas/go/src/Ejemplo7/disk2.dk"
 
 
 fdisk -size=1 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola1
-fdisk -size=4 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola2
+fdisk -size=4 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=e -fit=ff -name=hola2
 fdisk -size=5 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola3
 fdisk -size=5 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola4
 
@@ -25,3 +25,5 @@ mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
 rmgrp -name=grupo1
 
 rmusr -usuario=usuario1
+
+rep -id=851disk -path=/home/user/reports/reporte1.jpg -name=disk

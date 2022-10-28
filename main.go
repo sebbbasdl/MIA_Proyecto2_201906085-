@@ -4,18 +4,14 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"math/rand"
-	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/rs/cors"
 )
 
 var arregloMountId [20]string
@@ -61,7 +57,7 @@ type cmdstruct struct {
 }
 
 func main() {
-	fmt.Println("MIA - Ejemplo 10, API Rest GO")
+	/*fmt.Println("MIA - Ejemplo 10, API Rest GO")
 
 	mux := http.NewServeMux()
 
@@ -78,9 +74,9 @@ func main() {
 
 	fmt.Println("Server ON in port 5000")
 	handler := cors.Default().Handler(mux)
-	log.Fatal(http.ListenAndServe(":5000", handler))
+	log.Fatal(http.ListenAndServe(":5000", handler))*/
 
-	//analizar()
+	analizar()
 }
 
 func msg_error(err error) {
@@ -163,11 +159,11 @@ func existeE(mbr MBR) bool {
 }
 func analizar() {
 	finalizar := false
-	fmt.Println("MIA - Ejemplo 7, Analizador a Mano con Go (exit para salir...)")
+	fmt.Println("Proyecto 2 - MIA - 201906085 - Sebastian Alejandro de Leon Tenaz")
 	reader := bufio.NewReader(os.Stdin)
 	//  Ciclo para lectura de multiples comandos
 	for !finalizar {
-		fmt.Print("<Ejemplo_7>: ")
+		fmt.Print("<Ingresar Comando>: ")
 		comando, _ := reader.ReadString('\n')
 		if strings.Contains(comando, "exit") {
 			finalizar = true
@@ -238,7 +234,10 @@ func ejecucion_comando(commandArray []string) string {
 	} else if data == "mkdir" {
 		mkdir(commandArray)
 	} else if data == "mostrar" {
-		mostrar("C:/Users/sebas/go/src/Ejemplo7/disk.dk")
+		//mostrar("C:/Users/sebas/go/src/Ejemplo7/disk.dk")
+		mostrar2()
+	} else if data == "rep" {
+		reportes(commandArray)
 	} else {
 		fmt.Println("Comando ingresado no es valido")
 	}
@@ -2032,6 +2031,258 @@ func mkdir(commandArray []string) {
 	}
 }
 
+func reportes(commandArray []string) {
+	name := ""
+	path := ""
+	id := ""
+
+	flag_id := false
+	flag_path := false
+	flag_name := false
+	for i := 0; i < len(commandArray); i++ {
+		data := commandArray[i]
+		if strings.Contains(data, "-id=") {
+			flag_id = true
+			id = strings.Replace(data, "-id=", "", 1)
+			id = strings.Replace(id, "\"", "", 2)
+
+		} else if strings.Contains(data, "-path=") {
+			flag_path = true
+			path = strings.Replace(data, "-path=", "", 1)
+			path = strings.Replace(path, "\"", "", 2)
+
+		} else if strings.Contains(data, "-name=") {
+			flag_name = true
+			name = strings.Replace(data, "-name=", "", 1)
+			name = strings.Replace(name, "\"", "", 2)
+		}
+	}
+
+	if flag_id == true && flag_name == true && flag_path == true {
+		fmt.Println("Rep:")
+		fmt.Println(id)
+		fmt.Println(path)
+		fmt.Println(name)
+		var flag bool = false
+		lugar := 0
+		auxcont := 0
+
+		lugar = lugar + 0
+		auxcont = auxcont + 0
+
+		for x := 0; x < contadorMount; x++ {
+			if id == /*arregloMountId[x]*/ arregloMountId[x] {
+
+				//if(a_rep[0]==mbr.mbr_partition_1.part_name || a_rep[0]==mbr.mbr_partition_2.part_name || a_rep[0]==mbr.mbr_partition_3.part_name || a_rep[0]==mbr.mbr_partition_4.part_name) {
+				flag = true
+				lugar = x
+				break
+				//}
+				//auxcont += 1
+
+			}
+		}
+
+		disco, err := os.OpenFile(arregloMountPath[lugar], os.O_RDWR, 0660)
+		if err != nil {
+			msg_error(err)
+		}
+		disco.Seek(0, 0)
+
+		mbr := MBR{}
+
+		ejm2 := struct_to_bytes(mbr)
+		sstruct := len(ejm2)
+		fmt.Println(sstruct)
+
+		// Lectrura de conjunto de bytes en archivo binario
+		lectura := make([]byte, sstruct)
+		_, err = disco.ReadAt(lectura, int64(sstruct))
+		if err != nil && err != io.EOF {
+			msg_error(err)
+		}
+
+		// Conversion de bytes a struct
+		ejm := bytes_to_struct(lectura)
+		sstruct = len(lectura)
+
+		if err != nil {
+			msg_error(err)
+		}
+
+		//byte_string(string(ejm.Mbr_tamano[:]))
+
+		if flag == true && name == "mbr" {
+			var info string = ""
+			info += "digraph H{\n node [shape=plaintext];\n B [ label=< <TABLE BORDER =\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">\n<TR PORT=\"header\"><TD COLSPAN=\"2\">MBR</TD></TR>\n"
+			info += "<TR><TD PORT=\"1\">MBR_TAMANO</TD><TD> " + byte_string(ejm.Mbr_tamano) + " bytes</TD></TR>\n"
+			info += "<TR><TD PORT=\"2\">MBR_FECHA_CREACION</TD><TD>" + byte_string(ejm.Mbr_fecha_creacion) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"3\">MBR_DISK_SIGNATURE</TD><TD>" + byte_string(ejm.Mbr_disk_signature) + "</TD></TR>\n"
+
+			info += "<TR><TD  bgcolor='red' PORT=\"4\">PARTITION</TD><TD bgcolor='red' >1</TD></TR>"
+			info += "<TR><TD PORT=\"5\">PARTITION1_NAME</TD><TD>" + byte_string2(ejm.Mbr_partition_1.Part_name) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"6\">PARTITION1_SIZE</TD><TD>" + byte_string(ejm.Mbr_partition_1.Part_size) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"7\">PARTITION1_START</TD><TD>" + byte_string(ejm.Mbr_partition_1.Part_start) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"8\">PARTITION1_STATUS</TD><TD>" + byte_string(ejm.Mbr_partition_1.Part_status) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"9\">PARTITION1_TYPE</TD><TD>" + byte_string(ejm.Mbr_partition_1.Part_type) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"10\">PARTITION1_FIT</TD><TD>" + byte_string(ejm.Mbr_partition_1.Part_fit) + "</TD></TR>\n"
+
+			info += "<TR><TD  bgcolor='red' PORT=\"11\">PARTITION</TD><TD bgcolor='red' >2</TD></TR>\n"
+			info += "<TR><TD PORT=\"12\">PARTITION2_NAME</TD><TD>" + byte_string2(ejm.Mbr_partition_2.Part_name) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"13\">PARTITION2_SIZE</TD><TD>" + byte_string(ejm.Mbr_partition_2.Part_size) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"14\">PARTITION2_START</TD><TD>" + byte_string(ejm.Mbr_partition_2.Part_start) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"15\">PARTITION2_STATUS</TD><TD>" + byte_string(ejm.Mbr_partition_2.Part_status) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"16\">PARTITION2_TYPE</TD><TD>" + byte_string(ejm.Mbr_partition_2.Part_type) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"17\">PARTITION2_FIT</TD><TD>" + byte_string(ejm.Mbr_partition_2.Part_fit) + "</TD></TR>\n"
+
+			info += "<TR><TD  bgcolor='red' PORT=\"18\">PARTITION</TD><TD bgcolor='red' >3</TD></TR>\n"
+			info += "<TR><TD PORT=\"19\">PARTITION3_NAME</TD><TD>" + byte_string2(ejm.Mbr_partition_3.Part_name) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"20\">PARTITION3_SIZE</TD><TD>" + byte_string(ejm.Mbr_partition_3.Part_size) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"21\">PARTITION3_START</TD><TD>" + byte_string(ejm.Mbr_partition_3.Part_start) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"22\">PARTITION3_STATUS</TD><TD>" + byte_string(ejm.Mbr_partition_3.Part_status) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"23\">PARTITION3_TYPE</TD><TD>" + byte_string(ejm.Mbr_partition_3.Part_type) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"24\">PARTITION3_FIT</TD><TD>" + byte_string(ejm.Mbr_partition_3.Part_fit) + "</TD></TR>\n"
+
+			info += "<TR><TD  bgcolor='red' PORT=\"25\">PARTITION</TD><TD bgcolor='red' >4</TD></TR>\n"
+			info += "<TR><TD PORT=\"26\">PARTITION4_NAME</TD><TD>" + byte_string2(ejm.Mbr_partition_4.Part_name) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"27\">PARTITION4_SIZE</TD><TD>" + byte_string(ejm.Mbr_partition_4.Part_size) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"28\">PARTITION4_START</TD><TD>" + byte_string(ejm.Mbr_partition_4.Part_start) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"29\">PARTITION4_STATUS</TD><TD>" + byte_string(ejm.Mbr_partition_4.Part_status) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"30\">PARTITION4_TYPE</TD><TD>" + byte_string(ejm.Mbr_partition_4.Part_type) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"31\">PARTITION4_FIT</TD><TD>" + byte_string(ejm.Mbr_partition_4.Part_fit) + "</TD></TR>\n"
+			info += "</TABLE> >];}\n"
+			disco.Close()
+
+			f, err := os.Create("mbr.txt")
+			defer f.Close()
+			if err != nil {
+				fmt.Println(">> Error drawing graph!")
+			}
+			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			defer file.Close()
+			if err != nil {
+				fmt.Println(">> Error reading the file. Try again.")
+				return
+			}
+
+			f.WriteString(info)
+
+			e := exec.Command("dot", "-Tpng", "mbr.txt", "-o", "mbr.png")
+			if er := e.Run(); er != nil {
+				fmt.Println(">> Error", er)
+				return
+			}
+
+		} else if flag == true && name == "disk" {
+			text := ""
+			text += "digraph H {\nparent [shape=plaintext \nlabel=<\n<table border='1' cellborder='1'>\n <tr>\n"
+
+			size1, err := strconv.Atoi(byte_string(ejm.Mbr_partition_1.Part_size))
+			if err != nil && err != io.EOF {
+				msg_error(err)
+			}
+			size2, err := strconv.Atoi(byte_string(ejm.Mbr_partition_2.Part_size))
+			if err != nil && err != io.EOF {
+				msg_error(err)
+			}
+			size3, err := strconv.Atoi(byte_string(ejm.Mbr_partition_3.Part_size))
+			if err != nil && err != io.EOF {
+				msg_error(err)
+			}
+			size4, err := strconv.Atoi(byte_string(ejm.Mbr_partition_4.Part_size))
+			if err != nil && err != io.EOF {
+				msg_error(err)
+			}
+
+			tamanio, err := strconv.Atoi(byte_string(ejm.Mbr_tamano))
+			if err != nil && err != io.EOF {
+				msg_error(err)
+			}
+
+			/*var xd int64 = 10
+			var xd2 int64 = 99
+
+			var valor float64 = float64(float64(xd) / float64(xd2))
+			fmt.Println("---")
+			fmt.Println(tamanio)
+			fmt.Println(size1)
+			fmt.Println(size2)
+			fmt.Println(size3)
+			fmt.Println(size4)
+			fmt.Println(valor)*/
+			s1 := fmt.Sprintf("%.1f", ((float64(size1) / float64(tamanio)) * float64(100)))
+			s2 := fmt.Sprintf("%.1f", ((float64(size2) / float64(tamanio)) * float64(100)))
+			s3 := fmt.Sprintf("%.1f", ((float64(size3) / float64(tamanio)) * float64(100)))
+			s4 := fmt.Sprintf("%.1f", ((float64(size4) / float64(tamanio)) * float64(100)))
+			if size1 == 0 {
+				text += "<td port='port_one'>LIBRE</td>\n"
+			} else {
+				if byte_string(ejm.Mbr_partition_1.Part_type) == "p" {
+					text += "<td port='port_one'>PRIMARIA %" + s1 + "</td>\n"
+				} else if byte_string(ejm.Mbr_partition_1.Part_type) == "e" {
+					text += "<td port='port_one'>EXTENDIDA %" + s1 + "</td>\n"
+				}
+			}
+
+			if size1 == 0 {
+				text += "<td port='port_two'>LIBRE</td>\n"
+			} else {
+				if byte_string(ejm.Mbr_partition_2.Part_type) == "p" {
+					text += "<td port='port_two'>PRIMARIA %" + s2 + "</td>\n"
+				} else if byte_string(ejm.Mbr_partition_2.Part_type) == "e" {
+					text += "<td port='port_two'>EXTENDIDA %" + s2 + "</td>\n"
+				}
+			}
+
+			if size1 == 0 {
+				text += "<td port='port_three'>LIBRE</td>\n"
+			} else {
+				if byte_string(ejm.Mbr_partition_3.Part_type) == "p" {
+					text += "<td port='port_three'>PRIMARIA %" + s3 + "</td>\n"
+				} else if byte_string(ejm.Mbr_partition_3.Part_type) == "e" {
+					text += "<td port='port_three'>EXTENDIDA %" + s3 + "</td>\n"
+				}
+			}
+
+			if size4 == 0 {
+				text += "<td port='port_four'>LIBRE</td>\n"
+			} else {
+				if byte_string(ejm.Mbr_partition_4.Part_type) == "p" {
+					text += "<td port='port_four'>PRIMARIA %" + s4 + "</td>\n"
+				} else if byte_string(ejm.Mbr_partition_4.Part_type) == "e" {
+					text += "<td port='port_four'>EXTENDIDA %" + s4 + "</td>\n"
+				}
+			}
+
+			text += "</tr>\n</table>\n>];\n}"
+			disco.Close()
+
+			f, err := os.Create("disk.txt")
+			defer f.Close()
+			if err != nil {
+				fmt.Println(">> Error drawing graph!")
+			}
+			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			defer file.Close()
+			if err != nil {
+				fmt.Println(">> Error reading the file. Try again.")
+				return
+			}
+
+			f.WriteString(text)
+
+			e := exec.Command("dot", "-Tpng", "disk.txt", "-o", "disk.png")
+			if er := e.Run(); er != nil {
+				fmt.Println(">> Error", er)
+				return
+			}
+		}
+
+	} else {
+		fmt.Println("Falta algun parametro en reportes")
+	}
+}
+
 // mostrar
 func mostrar(path string) {
 	//fin_archivo := false
@@ -2212,4 +2463,52 @@ func crearArchivo_UyG(path string) {
 	_, err = file.WriteString("1,G,root\n1,U,root,root,123")
 
 	file.Close()
+}
+
+func mostrar2() {
+
+	var datos string = "digraph G {\na1 -> b3;\n}"
+	f, err := os.Create("mbr.txt")
+	defer f.Close()
+	if err != nil {
+		fmt.Println(">> Error drawing graph!")
+	}
+	file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/main.go")
+	defer file.Close()
+	if err != nil {
+		fmt.Println(">> Error reading the file. Try again.")
+		return
+	}
+
+	f.WriteString(datos)
+
+	e := exec.Command("dot", "-Tpng", "mbr.txt", "-o", "mbr.png")
+	if er := e.Run(); er != nil {
+		fmt.Println(">> Error", er)
+		return
+	}
+}
+
+func byte_string(dato [100]byte) string {
+	var aux byte
+	var sstring string
+	for i := 0; i < len(dato); i++ {
+		if dato[i] != aux {
+			sstring += string(dato[i])
+		}
+	}
+
+	return sstring
+}
+
+func byte_string2(dato [16]byte) string {
+	var aux byte
+	var sstring string
+	for i := 0; i < len(dato); i++ {
+		if dato[i] != aux {
+			sstring += string(dato[i])
+		}
+	}
+
+	return sstring
 }
