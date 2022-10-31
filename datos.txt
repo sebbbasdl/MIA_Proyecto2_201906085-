@@ -8,6 +8,6 @@ mkfs -id=851disk
 login -usuario=root -password=123 -id=851disk
 mkgrp -name="grupo1"
 mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
-rmgrp -name=grupo1
-rmusr -usuario=usuario1
-rep -id=851disk -path=/home/user/reports/reporte1.jpg -name=sb
+rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
+rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=sb
+rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=disk

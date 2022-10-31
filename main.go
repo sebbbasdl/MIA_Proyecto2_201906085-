@@ -82,20 +82,42 @@ func main() {
 	})
 
 	mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
 		w.Header().Set("Content-Type", "application/json")
-		bytes, _ := ioutil.ReadFile("./sb.png")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "disk.png")
 		var base64Encoding string
 		base64Encoding += "data:image/jpg;base64,"
 		base64Encoding += toBase64(bytes)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
 	})
+	mux.HandleFunc("/reportes2", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "mbr.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+	})
+	mux.HandleFunc("/reportes3", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "sb.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+
+	})
 
 	fmt.Println("Server ON in port 5000")
 	handler := cors.Default().Handler(mux)
 	log.Fatal(http.ListenAndServe(":5000", handler))
 
-	//analizar()
+	//	analizar()
 
 	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datos.txt"
 }
@@ -312,7 +334,7 @@ func crear_disco(commandArray []string) string {
 			path_mkdisk = strings.Replace(path_mkdisk, "\"", "", 2)
 		}
 	}
-
+	crearDirectorioSiNoExiste(path_sin_disco(path_mkdisk))
 	// Calculo de tamaño del archivo
 	if strings.Contains(dimensional, "k") {
 		tamano_archivo = tamano
@@ -2172,6 +2194,7 @@ func reportes(commandArray []string) string {
 	}
 
 	if flag_id == true && flag_name == true && flag_path == true {
+		crearDirectorioSiNoExiste(path_sin_disco(path))
 		fmt.Println("Rep:")
 		fmt.Println(id)
 		fmt.Println(path)
@@ -2285,7 +2308,7 @@ func reportes(commandArray []string) string {
 				fmt.Println(">> Error", er)
 				//return
 			}
-			respuesta = "Reporte MBR realizado\n"
+			respuesta = "Reporte MBR realizado\\n"
 			respuesta_exec += "Reporte MBR realizado\n"
 
 		} else if flag == true && name == "disk" {
@@ -2377,7 +2400,7 @@ func reportes(commandArray []string) string {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			file, err := os.Open(path_actual)
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
@@ -2391,7 +2414,7 @@ func reportes(commandArray []string) string {
 				fmt.Println(">> Error", er)
 				//return
 			}
-			respuesta = "Reporte DISK realizado\n"
+			respuesta = "Reporte DISK realizado\\n"
 			respuesta_exec += "Reporte DISK realizado\n"
 
 		} else if flag == true && name == "sb" {
@@ -2448,7 +2471,7 @@ func reportes(commandArray []string) string {
 				t.Hour(), t.Minute(), t.Second())
 			var info string = ""
 			info += "digraph H{\n node [shape=plaintext];\n B [ label=< <TABLE BORDER =\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">\n<TR PORT=\"header\"><TD COLSPAN=\"2\">SUPERBLOQUE</TD></TR>\n"
-			info += "<TR><TD PORT=\"1\">S_FILESYSTEM_TYPE</TD><TD> " + "ext2" + " bytes</TD></TR>\n"
+			info += "<TR><TD PORT=\"1\">S_FILESYSTEM_TYPE</TD><TD> " + "ext2" + "</TD></TR>\n"
 			info += "<TR><TD PORT=\"2\">S_INODES_COUNT</TD><TD>" + strconv.Itoa(2) + "</TD></TR>\n"
 			info += "<TR><TD PORT=\"3\">S_BLOCKS_COUNT</TD><TD>" + strconv.Itoa(entero) + "</TD></TR>\n"
 
@@ -2475,7 +2498,7 @@ func reportes(commandArray []string) string {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			file, err := os.Open(path_actual)
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
@@ -2494,7 +2517,7 @@ func reportes(commandArray []string) string {
 		}
 
 	} else {
-		respuesta = "Falta algun parametro en reportes\n"
+		respuesta = "Falta algun parametro en reportes\\n"
 		respuesta_exec += "Falta algun parametro en reportes\n"
 		fmt.Println("Falta algun parametro en reportes")
 	}

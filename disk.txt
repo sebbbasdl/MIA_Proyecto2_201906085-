@@ -1,0 +1,13 @@
+digraph H {
+parent [shape=plaintext 
+label=<
+<table border='1' cellborder='1'>
+ <tr>
+<td port='port_one'>PRIMARIA %6.7</td>
+<td port='port_two'>EXTENDIDA %26.7</td>
+<td port='port_three'>PRIMARIA %33.3</td>
+<td port='port_four'>PRIMARIA %33.3</td>
+</tr>
+</table>
+>];
+}
