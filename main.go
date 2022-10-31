@@ -5,21 +5,15 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"log"
 	"math"
 	"math/rand"
-	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/rs/cors"
 )
 
 var arregloMountId [20]string
@@ -34,6 +28,7 @@ var activa bool = false
 var usuario_actual string
 var path_actual string
 var respuesta_exec string
+var respuesta_rep string
 
 type partition = struct {
 	Part_status [100]byte
@@ -68,56 +63,56 @@ type cmdstruct struct {
 func main() {
 	fmt.Println("Proyecto 2 - MIA - 201906085 - Sebastian Alejandro de Leon Tenaz")
 
-	mux := http.NewServeMux()
+	/*	mux := http.NewServeMux()
 
-	mux.HandleFunc("/analizar", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		var Content cmdstruct
-		respuesta := ""
-		body, _ := io.ReadAll(r.Body)
-		json.Unmarshal(body, &Content)
-		respuesta = split_comando(Content.Cmd)
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"result": "` + respuesta + `" }`))
-	})
+		mux.HandleFunc("/analizar", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			var Content cmdstruct
+			respuesta := ""
+			body, _ := io.ReadAll(r.Body)
+			json.Unmarshal(body, &Content)
+			respuesta = split_comando(Content.Cmd)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"result": "` + respuesta + `" }`))
+		})
 
-	mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-		w.Header().Set("Content-Type", "application/json")
-		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "disk.png")
-		var base64Encoding string
-		base64Encoding += "data:image/jpg;base64,"
-		base64Encoding += toBase64(bytes)
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
-	})
-	mux.HandleFunc("/reportes2", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-		w.Header().Set("Content-Type", "application/json")
-		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "mbr.png")
-		var base64Encoding string
-		base64Encoding += "data:image/jpg;base64,"
-		base64Encoding += toBase64(bytes)
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
-	})
-	mux.HandleFunc("/reportes3", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-		w.Header().Set("Content-Type", "application/json")
-		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "sb.png")
-		var base64Encoding string
-		base64Encoding += "data:image/jpg;base64,"
-		base64Encoding += toBase64(bytes)
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+		mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+			w.Header().Set("Content-Type", "application/json")
+			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "disk.png")
+			var base64Encoding string
+			base64Encoding += "data:image/jpg;base64,"
+			base64Encoding += toBase64(bytes)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+		})
+		mux.HandleFunc("/reportes2", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+			w.Header().Set("Content-Type", "application/json")
+			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "mbr.png")
+			var base64Encoding string
+			base64Encoding += "data:image/jpg;base64,"
+			base64Encoding += toBase64(bytes)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+		})
+		mux.HandleFunc("/reportes3", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+			w.Header().Set("Content-Type", "application/json")
+			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "sb.png")
+			var base64Encoding string
+			base64Encoding += "data:image/jpg;base64,"
+			base64Encoding += toBase64(bytes)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
 
-	})
+		})
 
-	fmt.Println("Server ON in port 5000")
-	handler := cors.Default().Handler(mux)
-	log.Fatal(http.ListenAndServe(":5000", handler))
-
-	//	analizar()
+		fmt.Println("Server ON in port 5000")
+		handler := cors.Default().Handler(mux)
+		log.Fatal(http.ListenAndServe(":5000", handler))
+	*/
+	analizar()
 
 	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datos.txt"
 }
@@ -282,7 +277,7 @@ func ejecucion_comando(commandArray []string) string {
 		//mostrar2()
 		//crearDirectorioSiNoExiste("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/hola/")
 	} else if data == "rep" {
-		respuesta = reportes(commandArray)
+		respuesta = respuesta_rep
 	} else if data == "exec" {
 		respuesta = exece(commandArray)
 	} else if data == "pause" {
@@ -2165,8 +2160,8 @@ func mkdir(commandArray []string) {
 	}
 }
 
-func reportes(commandArray []string) string {
-	respuesta := ""
+func reportes(commandArray []string) {
+	respuesta_rep = ""
 
 	name := ""
 	path := ""
@@ -2300,7 +2295,7 @@ func reportes(commandArray []string) string {
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
-				//return
+				return
 			}
 
 			f.WriteString(info)
@@ -2308,9 +2303,9 @@ func reportes(commandArray []string) string {
 			e := exec.Command("dot", "-Tpng", "mbr.txt", "-o", "mbr.png")
 			if er := e.Run(); er != nil {
 				fmt.Println(">> Error", er)
-				//return
+				return
 			}
-			respuesta = "Reporte MBR realizado\\n"
+			respuesta_rep = "Reporte MBR realizado\\n"
 			respuesta_exec += "Reporte MBR realizado\n"
 
 		} else if flag == true && name == "disk" {
@@ -2406,7 +2401,7 @@ func reportes(commandArray []string) string {
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
-				//return
+				return
 			}
 
 			f.WriteString(text)
@@ -2414,9 +2409,9 @@ func reportes(commandArray []string) string {
 			e := exec.Command("dot", "-Tpng", "disk.txt", "-o", "disk.png")
 			if er := e.Run(); er != nil {
 				fmt.Println(">> Error", er)
-				//return
+				return
 			}
-			respuesta = "Reporte DISK realizado\\n"
+			respuesta_rep = "Reporte DISK realizado\\n"
 			respuesta_exec += "Reporte DISK realizado\n"
 
 		} else if flag == true && name == "sb" {
@@ -2504,7 +2499,7 @@ func reportes(commandArray []string) string {
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
-				//return
+				return
 			}
 
 			f.WriteString(info)
@@ -2512,18 +2507,18 @@ func reportes(commandArray []string) string {
 			e := exec.Command("dot", "-Tpng", "sb.txt", "-o", "sb.png")
 			if er := e.Run(); er != nil {
 				fmt.Println(">> Error", er)
-				//return
+				return
 			}
-			respuesta = "Reporte SB realizado\\n"
+			respuesta_rep = "Reporte SB realizado\\n"
 			respuesta_exec += "Reporte SB realizado\\n"
 		}
 
 	} else {
-		respuesta = "Falta algun parametro en reportes\\n"
+		respuesta_rep = "Falta algun parametro en reportes\\n"
 		respuesta_exec += "Falta algun parametro en reportes\n"
 		fmt.Println("Falta algun parametro en reportes")
 	}
-	return respuesta
+
 }
 
 // mostrar
