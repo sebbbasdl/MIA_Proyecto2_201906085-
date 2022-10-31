@@ -470,6 +470,7 @@ func crear_particion(commandArray []string) string {
 	// Lectura de parametros del comando
 	for i := 0; i < len(commandArray); i++ {
 		data := strings.ToLower(commandArray[i])
+		data2 := commandArray[i]
 		if strings.Contains(data, "-size=") {
 			straux = strings.Replace(data, "-size=", "", 1)
 			straux = strings.Replace(straux, "\"", "", 2)
@@ -484,8 +485,8 @@ func crear_particion(commandArray []string) string {
 			straux = strings.Replace(straux, "\"", "", 2)
 			straux = strings.Replace(straux, "\r", "", 1)
 			unit = straux
-		} else if strings.Contains(data, "-path=") {
-			straux = strings.Replace(data, "-path=", "", 1)
+		} else if strings.Contains(data2, "-path=") {
+			straux = strings.Replace(data2, "-path=", "", 1)
 			straux = strings.Replace(straux, "\"", "", 2)
 			straux = strings.Replace(straux, "\r", "", 1)
 			path = straux
