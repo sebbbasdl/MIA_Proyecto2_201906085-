@@ -2291,7 +2291,7 @@ func reportes(commandArray []string) {
 			info += "</TABLE> >];}\n"
 			disco.Close()
 
-			f, err := os.Create("mbr.txt")
+			f, err := os.Create(path_actual + "mbr.txt")
 			defer f.Close()
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
@@ -2311,6 +2311,7 @@ func reportes(commandArray []string) {
 				fmt.Println(">> Error", er)
 				return
 			}
+			fmt.Println("Reporte MBR realizado")
 			respuesta_rep = "Reporte MBR realizado\\n"
 			respuesta_exec += "Reporte MBR realizado\n"
 
@@ -2398,7 +2399,7 @@ func reportes(commandArray []string) {
 			text += "</tr>\n</table>\n>];\n}"
 			disco.Close()
 
-			f, err := os.Create("disk.txt")
+			f, err := os.Create(path_actual + "disk.txt")
 			defer f.Close()
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
@@ -2496,7 +2497,7 @@ func reportes(commandArray []string) {
 			info += "</TABLE> >];}\n"
 			disco.Close()
 
-			f, err := os.Create("sb.txt")
+			f, err := os.Create(path_actual + "sb.txt")
 			defer f.Close()
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")

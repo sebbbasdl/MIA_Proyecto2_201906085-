@@ -1,13 +1,13 @@
-mkdisk -size=15 -unit="m" -path="MIA_Proyecto2_201906085-/disk.dk"
-fdisk -size=1 -unit=m -path="MIA_Proyecto2_201906085-/disk.dk" -tipo=p -fit=ff -name=hola1
+mkdisk -size=15 -unit="m" -path="/home/ubuntu/MIA_Proyecto2_201906085-/disk.dk"
+fdisk -size=1 -unit=m -path="/home/ubuntu/MIA_Proyecto2_201906085-/disk.dk" -tipo=p -fit=ff -name=hola1
 fdisk -size=4 -unit=m -path="MIA_Proyecto2_201906085-/disk.dk" -tipo=e -fit=ff -name=hola2
 fdisk -size=5 -unit=m -path="MIA_Proyecto2_201906085-/disk.dk" -tipo=p -fit=ff -name=hola3
 fdisk -size=5 -unit=m -path="MIA_Proyecto2_201906085-/disk.dk" -tipo=p -fit=ff -name=hola4
-mount -path="MIA_Proyecto2_201906085-/disk.dk" -name=hola1
+mount -path="/home/ubuntu/MIA_Proyecto2_201906085-/disk.dk" -name=hola1
 mkfs -id=851disk
 login -usuario=root -password=123 -id=851disk
 mkgrp -name="grupo1"
 mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
-rep -id=851disk -path="MIA_Proyecto2_201906085-/" -name=mbr
+rep -id=851disk -path="/home/ubuntu/MIA_Proyecto2_201906085-/" -name=mbr
 rep -id=851disk -path="MIA_Proyecto2_201906085-/" -name=sb
 rep -id=851disk -path="MIA_Proyecto2_201906085-/" -name=disk

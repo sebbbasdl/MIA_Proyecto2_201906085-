@@ -25,6 +25,7 @@ export class EjemploService {
   }
 
   getReporte(){
+    console.log("REPORTE")
     return this.httpClient.get("http://3.144.218.197:5000/reportes");
   }
   getReporte2(){

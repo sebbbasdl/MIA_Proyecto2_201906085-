@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         this.salida += await res.result + "\n";
         console.log("salida: "+this.salida)
         console.log(this.salida[0])
-        if(this.salida[0]=="M"){
+        if(this.salida[0]=="/"){
           console.log("entre")
           this.router.navigate(['reporte']);
         }else{
