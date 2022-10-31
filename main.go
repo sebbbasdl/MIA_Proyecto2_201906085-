@@ -2295,7 +2295,8 @@ func reportes(commandArray []string) string {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			file, err := os.Open(path_actual)
+
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
