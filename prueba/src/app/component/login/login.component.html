@@ -1,0 +1,30 @@
+<body style="background-color: black ; color: #faf8f8 ; ">
+<nav class="navbar navbar-dark bg-dark">
+    <form class="container-fluid justify-content-end">
+        <a class="btn btn-sm btn-outline-primary" type="button" style="margin-right: 5px;" href="/inicio">Inicio</a>
+        <a class="btn btn-sm btn-outline-secondary" type="button" href="/login">Login</a>
+    </form>
+  </nav>
+
+<div class="container-fluid" style="margin-top: 3%; width: 80%;">
+  <div class="mb-3">
+    <label for="inputid" class="form-label">ID Particion</label>
+    <input type="text" class="form-control" id="inputid" [(ngModel)]="id" name="id">
+  </div>
+  <div class="mb-3">
+      <label for="inputuser" class="form-label">User</label>
+      <input type="text" class="form-control" id="inputusuario" [(ngModel)]="usuario" name="usuario">
+    </div>
+  <div class="mb-3">
+    <label for="inputpwd" class="form-label">Password</label>
+    <input type="password" class="form-control" id="inputpass" [(ngModel)]="pass" name="pass">
+  </div>
+  <div class="mb-3">
+      <button type="submit" class="btn btn-primary" id="btnlogins" (click)="ejecutar2()">Login</button>
+  </div>
+
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+
+

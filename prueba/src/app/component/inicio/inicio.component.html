@@ -1,0 +1,33 @@
+<body style="background-color: black ; color: #faf8f8 ; ">
+  <nav class="navbar navbar-dark bg-dark">
+    <form class="container-fluid justify-content-end">
+        <a class="btn btn-sm btn-outline-primary" type="button" style="margin-right: 5px;" href="/inicio">Inicio</a>
+        <a class="btn btn-sm btn-outline-secondary" type="button" href="/login">Login</a>
+    </form>
+  </nav>
+
+<div class="container-fluid" style="margin-top: 0%; width: 80%; ">
+  <br>
+
+  <form>
+      <div class="form-group" style="margin-bottom: 2%; ">
+          <input #fileUpload [hidden]="true" type="file" class="file-input" (change)="onFileSelected($event)">
+          <button class="btn btn-primary" (click)="fileUpload.click()" style="margin-right: 1280px; background-color: rgb(2, 43, 31)">Cargar Archivo</button>
+          <button class="btn btn-success" (click)="ejecutar()"  style="background-color: rgb(43, 2, 2) ;" >Ejecutar</button>
+      </div>
+      <div class="form-group">
+        <label for="entradatxtarea">Entrada</label>
+        <textarea class="form-control" id="entradatxtarea" rows="15" [(ngModel)]="entrada" name="entrada" style="background-color: #87CEEB;"></textarea>
+      </div>
+      <div class="form-group" style="margin-top: 5%; ">
+          <label for="salidatxtarea">Salida</label>
+          <textarea class="form-control" id="salidatxtarea" rows="13" [(ngModel)]="salida"  name="salida" style="background-color: #87CEEB;"></textarea>
+        </div>
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+</body>
