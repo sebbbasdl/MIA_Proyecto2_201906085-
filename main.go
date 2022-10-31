@@ -5,15 +5,21 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"math"
 	"math/rand"
+	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/rs/cors"
 )
 
 var arregloMountId [20]string
@@ -63,56 +69,56 @@ type cmdstruct struct {
 func main() {
 	fmt.Println("Proyecto 2 - MIA - 201906085 - Sebastian Alejandro de Leon Tenaz")
 
-	/*	mux := http.NewServeMux()
+	mux := http.NewServeMux()
 
-		mux.HandleFunc("/analizar", func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			var Content cmdstruct
-			respuesta := ""
-			body, _ := io.ReadAll(r.Body)
-			json.Unmarshal(body, &Content)
-			respuesta = split_comando(Content.Cmd)
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"result": "` + respuesta + `" }`))
-		})
+	mux.HandleFunc("/analizar", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		var Content cmdstruct
+		respuesta := ""
+		body, _ := io.ReadAll(r.Body)
+		json.Unmarshal(body, &Content)
+		respuesta = split_comando(Content.Cmd)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + respuesta + `" }`))
+	})
 
-		mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-			w.Header().Set("Content-Type", "application/json")
-			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "disk.png")
-			var base64Encoding string
-			base64Encoding += "data:image/jpg;base64,"
-			base64Encoding += toBase64(bytes)
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
-		})
-		mux.HandleFunc("/reportes2", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-			w.Header().Set("Content-Type", "application/json")
-			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "mbr.png")
-			var base64Encoding string
-			base64Encoding += "data:image/jpg;base64,"
-			base64Encoding += toBase64(bytes)
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
-		})
-		mux.HandleFunc("/reportes3", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
-			w.Header().Set("Content-Type", "application/json")
-			bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "sb.png")
-			var base64Encoding string
-			base64Encoding += "data:image/jpg;base64,"
-			base64Encoding += toBase64(bytes)
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+	mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "disk.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+	})
+	mux.HandleFunc("/reportes2", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "mbr.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+	})
+	mux.HandleFunc("/reportes3", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("-----SOY PATH ACTUAL " + path_sin_disco(path_actual))
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile(path_sin_disco(path_actual) + "sb.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
 
-		})
+	})
 
-		fmt.Println("Server ON in port 5000")
-		handler := cors.Default().Handler(mux)
-		log.Fatal(http.ListenAndServe(":5000", handler))
-	*/
-	analizar()
+	fmt.Println("Server ON in port 5000")
+	handler := cors.Default().Handler(mux)
+	log.Fatal(http.ListenAndServe(":5000", handler))
+
+	//analizar()
 
 	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datos.txt"
 }
