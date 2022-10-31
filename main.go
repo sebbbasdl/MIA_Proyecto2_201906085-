@@ -334,7 +334,7 @@ func crear_disco(commandArray []string) string {
 			path_mkdisk = strings.Replace(path_mkdisk, "\"", "", 2)
 		}
 	}
-	crearDirectorioSiNoExiste(path_sin_disco(path_mkdisk))
+	//crearDirectorioSiNoExiste(path_sin_disco(path_mkdisk))
 	// Calculo de tamaño del archivo
 	if strings.Contains(dimensional, "k") {
 		tamano_archivo = tamano
@@ -2194,7 +2194,7 @@ func reportes(commandArray []string) string {
 	}
 
 	if flag_id == true && flag_name == true && flag_path == true {
-		crearDirectorioSiNoExiste(path_sin_disco(path))
+		//crearDirectorioSiNoExiste(path_sin_disco(path))
 		fmt.Println("Rep:")
 		fmt.Println(id)
 		fmt.Println(path)
