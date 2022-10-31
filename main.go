@@ -3,15 +3,23 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/base64"
 	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"math"
 	"math/rand"
+	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/rs/cors"
 )
 
 var arregloMountId [20]string
@@ -25,6 +33,7 @@ var contadorMount2 int = 0
 var activa bool = false
 var usuario_actual string
 var path_actual string
+var respuesta_exec string
 
 type partition = struct {
 	Part_status [100]byte
@@ -57,7 +66,7 @@ type cmdstruct struct {
 }
 
 func main() {
-	/*fmt.Println("MIA - Ejemplo 10, API Rest GO")
+	fmt.Println("Proyecto 2 - MIA - 201906085 - Sebastian Alejandro de Leon Tenaz")
 
 	mux := http.NewServeMux()
 
@@ -72,11 +81,23 @@ func main() {
 		w.Write([]byte(`{"result": "` + respuesta + `" }`))
 	})
 
+	mux.HandleFunc("/reportes", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		bytes, _ := ioutil.ReadFile("./sb.png")
+		var base64Encoding string
+		base64Encoding += "data:image/jpg;base64,"
+		base64Encoding += toBase64(bytes)
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"result": "` + base64Encoding + `" }`))
+	})
+
 	fmt.Println("Server ON in port 5000")
 	handler := cors.Default().Handler(mux)
-	log.Fatal(http.ListenAndServe(":5000", handler))*/
+	log.Fatal(http.ListenAndServe(":5000", handler))
 
-	analizar()
+	//analizar()
+
+	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datos.txt"
 }
 
 func msg_error(err error) {
@@ -199,45 +220,52 @@ func ejecucion_comando(commandArray []string) string {
 		respuesta = crear_disco(commandArray)
 
 	} else if data == "fdisk" {
-		crear_particion(commandArray)
+		respuesta = crear_particion(commandArray)
 	} else if data == "rmdisk" {
-		eliminar_disco(commandArray)
+		respuesta = eliminar_disco(commandArray)
 	} else if data == "mount" {
 		//fmt.Println(commandArray)
 		//fmt.Println(len(commandArray))
 		if len(commandArray) == 1 {
-			onlymount()
+			respuesta = onlymount()
 		} else {
-			mount_particion(commandArray)
+			respuesta = mount_particion(commandArray)
 		}
 
 	} else if data == "mkfs" {
-		mkfs(commandArray)
+		respuesta = mkfs(commandArray)
 	} else if data == "login" {
-		login(commandArray)
+		respuesta = login(commandArray)
 	} else if data == "logout" {
 		activa = false
 		usuario_actual = ""
 		path_actual = ""
 		fmt.Println("Usted ha cerrado sesion")
+		respuesta = "Usted ha cerrado sesion"
 
 	} else if data == "mkgrp" {
-		mkgrp(commandArray)
+		respuesta = mkgrp(commandArray)
 	} else if data == "rmgrp" {
-		rmgrp(commandArray)
+		respuesta = rmgrp(commandArray)
 	} else if data == "mkusr" {
-		mkuser(commandArray)
+		respuesta = mkuser(commandArray)
 	} else if data == "rmusr" {
-		rmusr(commandArray)
+		respuesta = rmusr(commandArray)
 	} else if data == "mkfile" {
 		mkfile(commandArray)
 	} else if data == "mkdir" {
 		mkdir(commandArray)
 	} else if data == "mostrar" {
 		//mostrar("C:/Users/sebas/go/src/Ejemplo7/disk.dk")
-		mostrar2()
+		//mostrar2()
+		//crearDirectorioSiNoExiste("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/hola/")
 	} else if data == "rep" {
-		reportes(commandArray)
+		respuesta = reportes(commandArray)
+	} else if data == "exec" {
+		respuesta = exece(commandArray)
+	} else if data == "pause" {
+		respuesta = "Press 'Enter' to continue..."
+		pausee()
 	} else {
 		fmt.Println("Comando ingresado no es valido")
 	}
@@ -298,6 +326,7 @@ func crear_disco(commandArray []string) string {
 	}
 
 	// Creacion, escritura y cierre de archivo
+	//crearDirectorioSiNoExiste(path_mkdisk)
 
 	if flag_path == true && flag_size == true {
 		disco, err := os.Create(path_mkdisk)
@@ -373,9 +402,14 @@ func crear_disco(commandArray []string) string {
 		fmt.Println(string(mbrstruc.Mbr_partition_1.Part_fit[:]))
 		fmt.Println(string(mbrstruc.Mbr_partition_4.Part_name[:]))
 
+		respuesta = "Disco creado :    SIZE: " + strconv.Itoa(tamano) + "  PATH: " + path_mkdisk + "  UNIT: " + dimensional + "\\n"
+		respuesta_exec += "Disco creado :    SIZE: " + strconv.Itoa(tamano) + "  PATH: " + path_mkdisk + "  UNIT: " + dimensional + "\\n"
+
 		disco.Close()
 
 	} else {
+		respuesta = "¡Error, no tiene path o size en mkdisk!"
+		respuesta_exec += "¡Error, no tiene path o size en mkdisk!"
 		fmt.Println("¡Error, no tiene path o size en mkdisk!")
 	}
 
@@ -394,8 +428,6 @@ func crear_disco(commandArray []string) string {
 		}
 	}*/
 
-	respuesta = "mkdisk:  SIZE: " + strconv.Itoa(tamano) + "  PATH: " + path_mkdisk + "  UNIT: " + dimensional + "\\n"
-
 	return respuesta
 }
 
@@ -403,8 +435,8 @@ func crear_disco(commandArray []string) string {
 // fdisk -size=1 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola1
 // fdisk -size=4 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola2
 // fdisk -size=5 -unit=m -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -tipo=p -fit=ff -name=hola3
-func crear_particion(commandArray []string) {
-
+func crear_particion(commandArray []string) string {
+	respuesta := ""
 	straux := ""
 	flagf := true
 	size := 0
@@ -526,6 +558,8 @@ func crear_particion(commandArray []string) {
 	if tipo == "p" || tipo == "e" {
 		if ejm.Mbr_partition_1.Part_status != aux && ejm.Mbr_partition_2.Part_status != aux && ejm.Mbr_partition_3.Part_status != aux && ejm.Mbr_partition_4.Part_status != aux {
 			fmt.Println("Todas las particiones estan ocupadas")
+			respuesta = "Todas las particiones estan ocupadas"
+			respuesta_exec += "Todas las particiones estan ocupadas" + "\n"
 			flagf = false
 		}
 	}
@@ -534,12 +568,16 @@ func crear_particion(commandArray []string) {
 		if existeE(ejm) == true {
 			fmt.Println("Ya existe una particion extendida en " + name)
 			flagf = false
+			respuesta = "Ya existe una particion extendida en " + name
+			respuesta_exec += "Ya existe una particion extendida en " + name + "\n"
 
 		}
 	} else if tipo == "l" && flagf == true {
 		if existeE(ejm) == false {
 			fmt.Println("No existe un particion extendida en " + name + " entonces no se puede crear la particion logica.")
 			flagf = false
+			respuesta = "No existe un particion extendida en " + name + " entonces no se puede crear la particion logica."
+			respuesta_exec += "No existe un particion extendida en " + name + " entonces no se puede crear la particion logica.\n"
 
 		}
 
@@ -607,6 +645,8 @@ func crear_particion(commandArray []string) {
 				fmt.Println(espaciototal2)
 				//rewind(file)
 				//fwrite(&mbr, sizeof(MBR), 1, file)
+				respuesta = "Particion relealizada:  " + name
+				respuesta_exec += "Particion relealizada:  " + name + "\n"
 			}
 		} else {
 			fmt.Println(string(ejm.Mbr_partition_1.Part_status[:]))
@@ -817,7 +857,8 @@ func crear_particion(commandArray []string) {
 
 				}
 			}
-
+			respuesta = "Particion relealizada:  " + name
+			respuesta_exec += "Particion relealizada:  " + name + "\n"
 		}
 	}
 
@@ -837,11 +878,14 @@ func crear_particion(commandArray []string) {
 	fmt.Println(fit)
 	fmt.Println(" name: ")
 	fmt.Println(name)
+
+	return respuesta
+
 }
 
 // rmdisk -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk"
-func eliminar_disco(commandArray []string) {
-
+func eliminar_disco(commandArray []string) string {
+	respuesta := ""
 	path_rmdisk := ""
 
 	flag_path := false
@@ -860,17 +904,24 @@ func eliminar_disco(commandArray []string) {
 		err := os.Remove(path_rmdisk)
 		if err != nil {
 			fmt.Printf("Error eliminando archivo: %v\n", err)
+			respuesta = "Error eliminando archivo"
+			respuesta_exec += "Error eliminando archivo\n"
 		} else {
 			fmt.Println("Eliminado correctamente")
+			respuesta = "Eliminado correctamente"
+			respuesta_exec += "Eliminado correctamente\n"
 		}
 	} else {
 		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
+		respuesta = "¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!"
+		respuesta_exec += "¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!\n"
 	}
+	return respuesta
 }
 
 // mount -path="C:\Users\sebas\go\src\Ejemplo7\disk.dk" -name=hola1
-func mount_particion(commandArray []string) {
-
+func mount_particion(commandArray []string) string {
+	respuesta := ""
 	path_mount := ""
 	name := ""
 
@@ -922,6 +973,7 @@ func mount_particion(commandArray []string) {
 			nombredisco += string(path_mount[i])
 		}
 		fmt.Println(nombredisco)
+		fmt.Println("path_mount: ")
 		fmt.Println(path_mount)
 
 		disco, err := os.OpenFile(path_mount, os.O_RDWR, 0660)
@@ -1020,7 +1072,11 @@ func mount_particion(commandArray []string) {
 
 			} else {
 				fmt.Println("Esta particion no existe en el disco con la ruta: " + string(auxx1[:]))
+				respuesta = "Esta particion no existe en el disco con la ruta: " + string(auxx1[:])
+				respuesta_exec += "Esta particion no existe en el disco con la ruta: " + string(auxx1[:]) + "\n"
 			}
+			respuesta += name + "ha sido montada."
+			respuesta_exec += name + "ha sido montada.\n"
 			//cout << "------STATUS----" << endl
 
 		} else {
@@ -1201,7 +1257,8 @@ func mount_particion(commandArray []string) {
 
 				}
 			}
-
+			respuesta = name + "ha sido montada."
+			respuesta_exec += name + "ha sido montada.\n"
 		}
 		fmt.Println(string(ejm.Mbr_partition_1.Part_status[:]))
 		fmt.Println(string(ejm.Mbr_partition_2.Part_status[:]))
@@ -1244,22 +1301,29 @@ func mount_particion(commandArray []string) {
 
 		disco1.Close()*/
 	} else {
+		respuesta = "¡Error, no es posible ejecutar el comando mount hizo falta un dato!"
+		respuesta_exec += "¡Error, no es posible ejecutar el comando mount hizo falta un dato!\n"
 		fmt.Println("¡Error, no es posible ejecutar el comando mount hizo falta un dato!")
 	}
+	return respuesta
 }
 
-func onlymount() {
+func onlymount() string {
+	respuesta := ""
 	//cout << contadorMount << endl
 	for i := 0; i < contadorMount; i++ {
 		fmt.Println(strconv.Itoa(i) + " " + arregloMountId[i] + " " + arregloMountPath[i] + " " + arregloMountPart[i])
+		respuesta = strconv.Itoa(i) + " " + arregloMountId[i]
+		respuesta_exec += strconv.Itoa(i) + " " + arregloMountId[i] + "\n"
 
 	}
+	return respuesta
 
 }
 
 // mkfs -id=851disk
-func mkfs(commandArray []string) {
-
+func mkfs(commandArray []string) string {
+	respuesta := ""
 	id := ""
 	tipo := ""
 
@@ -1307,17 +1371,22 @@ func mkfs(commandArray []string) {
 			path2 += auxpath
 			fmt.Println(path2)
 			crearArchivo_UyG(path2)
+			respuesta = "mkfs realizado correctamente"
+			respuesta_exec += "mkfs realizado correctamente\n"
 		}
 
 	} else {
-		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
+		fmt.Println("¡Error, no es posible ejecutar el comando mkfs")
+		respuesta = "¡Error, no es posible ejecutar el comando mkfs "
+		respuesta_exec += "¡Error, no es posible ejecutar el comando mkfs \n"
 	}
+	return respuesta
 }
 
 //login -usuario=root -password=123 -id=851disk
 
-func login(commandArray []string) {
-
+func login(commandArray []string) string {
+	respuesta := ""
 	id := ""
 	usuario := ""
 	password := ""
@@ -1369,6 +1438,7 @@ func login(commandArray []string) {
 		}
 
 		path = path_sin_disco(path)
+		pathenviar := path
 		path += "users.txt"
 
 		if activa == false && flag == true {
@@ -1416,15 +1486,21 @@ func login(commandArray []string) {
 					if datos[3] == usuario && datos[4] == password {
 						activa = true
 						fmt.Println("Inicio de sesion correcto, bienvenido: " + usuario)
+						respuesta = pathenviar
+						respuesta_exec += "Inicio de sesion correcto, bienvenido: " + usuario + "\n"
 						path_actual = path
 						if usuario == "root" {
 							fmt.Println("Usuario root activo")
+							respuesta += "\\n Usuario root activo"
+							respuesta_exec += "\nUsuario root activo\n"
 						}
 
 						usuario_actual = usuario
 
 						break
 					} else {
+						respuesta += "Usuario o contraseña son incorrectos\n"
+						respuesta_exec += "Usuario o contraseña son incorrectos\n"
 						fmt.Println("Usuario o contraseña son incorrectos")
 					}
 				}
@@ -1433,16 +1509,21 @@ func login(commandArray []string) {
 			file.Close()
 
 		} else {
+			respuesta += "No se puede iniciar sesion ya que hay un usuario activo o el id no existe\n"
+			respuesta_exec += "No se puede iniciar sesion ya que hay un usuario activo o el id no existe\n"
 			fmt.Println("No se puede iniciar sesion ya que hay un usuario activo o el id no existe")
 		}
 
 	} else {
+		respuesta += "¡Error, no es posible ejecutar el comando Login ya que falta algun dato "
+		respuesta_exec += "¡Error, no es posible ejecutar el comando Login ya que falta algun dato \n"
 		fmt.Println("¡Error, no es posible ejecutar el comando Login ya que falta algun dato ")
 	}
+	return respuesta
 }
 
-func mkgrp(commandArray []string) {
-
+func mkgrp(commandArray []string) string {
+	respuesta := ""
 	name := ""
 
 	flag_name := false
@@ -1529,6 +1610,7 @@ func mkgrp(commandArray []string) {
 			}
 
 			if flag == true {
+				respuesta = "Creacion de grupo correcta" + name
 
 				_, err = file.WriteString("\n" + strconv.Itoa(id_grupo+1) + ",G," + name)
 				if err != nil {
@@ -1541,17 +1623,22 @@ func mkgrp(commandArray []string) {
 			file.Close()
 
 		} else {
+			respuesta += "No se puede crear un grupo ya que la sesion no es del usuario root"
+			respuesta_exec += "No se puede crear un grupo ya que la sesion no es del usuario root\n"
 			fmt.Println("No se puede crear un grupo ya que la sesion no es del usuario root")
 		}
 
 	} else {
+		respuesta += "¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!"
+		respuesta_exec += "¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!\n"
 		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
 	}
+	return respuesta
 }
 
 //rmgrp -name=grupo1
-func rmgrp(commandArray []string) {
-
+func rmgrp(commandArray []string) string {
+	respuesta := ""
 	name := ""
 
 	flag_name := false
@@ -1662,22 +1749,28 @@ func rmgrp(commandArray []string) {
 					//	fmt.Println("es aca")
 					msg_error(err)
 				}
+				respuesta += "Grupo eliminado" + name + "\n"
 
 			}
 			file2.Close()
 
 		} else {
+			respuesta += "No se puede crear un grupo ya que la sesion no es del usuario root\n"
+			respuesta_exec += "No se puede crear un grupo ya que la sesion no es del usuario root\n"
 			fmt.Println("No se puede crear un grupo ya que la sesion no es del usuario root")
 		}
 	} else {
-		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
+		respuesta += "¡Error, no es posible ejecutar el comando rmgrp!\n"
+		respuesta_exec += "¡Error, no es posible ejecutar el comando rmgrp!\n"
+		fmt.Println("¡Error, no es posible ejecutar el comando rmgrp!")
 	}
+	return respuesta
 }
 
 //mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
 
-func mkuser(commandArray []string) {
-
+func mkuser(commandArray []string) string {
+	respuesta := ""
 	grp := ""
 	usuario := ""
 	password := ""
@@ -1773,6 +1866,8 @@ func mkuser(commandArray []string) {
 					if datos[3] == usuario {
 						flaguser = false
 						fmt.Println("Ya existe el usuario: " + usuario + " por lo tanto no se podrá crear.")
+						respuesta += "Ya existe el usuario: " + usuario + " por lo tanto no se podrá crear."
+						respuesta_exec += "Ya existe el usuario: " + usuario + " por lo tanto no se podrá crear.\n"
 					} else {
 						id_grupo, err = strconv.Atoi(datos[0])
 						if err != nil {
@@ -1810,6 +1905,8 @@ func mkuser(commandArray []string) {
 
 			if flaggroup == false {
 				fmt.Println("El grupo no existe: " + grp)
+				respuesta += "El grupo no existe: " + grp
+				respuesta_exec += "El grupo no existe: " + grp + "\n"
 			}
 
 			if flaguser == true && flaggroup == true {
@@ -1819,21 +1916,28 @@ func mkuser(commandArray []string) {
 					//	fmt.Println("es aca")
 					msg_error(err)
 				}
+				respuesta += "Creacion correcta de" + usuario + "\n"
+				respuesta_exec += "Creacion correcta de" + usuario + "\n"
 
 			}
 
 			file.Close()
 
 		} else {
+			respuesta += "No se puede crear usuario ya que no ha iniciado sesion en el usuario root!!!\n"
+			respuesta_exec += "No se puede crear usuario ya que no ha iniciado sesion en el usuario root!!!\n"
 			fmt.Println("No se puede crear usuario ya que no ha iniciado sesion en el usuario root!!!")
 		}
 	} else {
-		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
+		respuesta += "¡Error, no es posible ejecutar el comando mkusr ya que falta el dato de path!\n"
+		respuesta_exec += "¡Error, no es posible ejecutar el comando mkusr ya que falta el dato de path!\n"
+		fmt.Println("¡Error, no es posible ejecutar el comando mkusr ya que falta el dato de path!")
 	}
+	return respuesta
 }
 
-func rmusr(commandArray []string) {
-
+func rmusr(commandArray []string) string {
+	respuesta := ""
 	usuario := ""
 
 	flag_usuario := false
@@ -1944,16 +2048,23 @@ func rmusr(commandArray []string) {
 					//	fmt.Println("es aca")
 					msg_error(err)
 				}
+				respuesta += "Usuario eliminado" + usuario + "\n"
 
 			}
 			file2.Close()
 
 		} else {
+			respuesta += "No se puede crear un grupo ya que la sesion no es del usuario root\n"
+			respuesta_exec += "No se puede crear un grupo ya que la sesion no es del usuario root\n"
 			fmt.Println("No se puede crear un grupo ya que la sesion no es del usuario root")
 		}
 	} else {
-		fmt.Println("¡Error, no es posible ejecutar el comando rmdisk ya que falta el dato de path!")
+		respuesta = "¡Error, no es posible ejecutar el comando rmusr!\n"
+		respuesta_exec = "¡Error, no es posible ejecutar el comando rmusr!\n"
+		fmt.Println("¡Error, no es posible ejecutar el comando rmusr!")
 	}
+
+	return respuesta
 }
 
 func mkfile(commandArray []string) {
@@ -2031,7 +2142,9 @@ func mkdir(commandArray []string) {
 	}
 }
 
-func reportes(commandArray []string) {
+func reportes(commandArray []string) string {
+	respuesta := ""
+
 	name := ""
 	path := ""
 	id := ""
@@ -2162,7 +2275,7 @@ func reportes(commandArray []string) {
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
-				return
+				//return
 			}
 
 			f.WriteString(info)
@@ -2170,8 +2283,10 @@ func reportes(commandArray []string) {
 			e := exec.Command("dot", "-Tpng", "mbr.txt", "-o", "mbr.png")
 			if er := e.Run(); er != nil {
 				fmt.Println(">> Error", er)
-				return
+				//return
 			}
+			respuesta = "Reporte MBR realizado\n"
+			respuesta_exec += "Reporte MBR realizado\n"
 
 		} else if flag == true && name == "disk" {
 			text := ""
@@ -2266,7 +2381,7 @@ func reportes(commandArray []string) {
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
-				return
+				//return
 			}
 
 			f.WriteString(text)
@@ -2274,13 +2389,116 @@ func reportes(commandArray []string) {
 			e := exec.Command("dot", "-Tpng", "disk.txt", "-o", "disk.png")
 			if er := e.Run(); er != nil {
 				fmt.Println(">> Error", er)
-				return
+				//return
 			}
+			respuesta = "Reporte DISK realizado\n"
+			respuesta_exec += "Reporte DISK realizado\n"
+
+		} else if flag == true && name == "sb" {
+			poss := 0
+			poss = poss + 0
+			for i := 0; i < contadorMount; i++ {
+				if id == arregloMountId[i] {
+					path = arregloMountPath[i]
+					poss = i
+
+					flag = true
+					break
+				}
+			}
+
+			path_users := path_sin_disco(path) + "users.txt"
+
+			fmt.Println("soy actyal" + path_actual)
+			arch, err := os.OpenFile(path_users, os.O_RDWR, 0660)
+			if err != nil {
+				fmt.Println("es aca")
+				msg_error(err)
+			}
+			var texto string
+			var aux_texto string
+			var cont_datos int
+			cont_datos = cont_datos + 0
+
+			scanner := bufio.NewScanner(arch)
+			for scanner.Scan() {
+				//contadorlog+=1;
+				texto = scanner.Text()
+				//cout<<contadorlog<<texto<<endl;
+				//cout<<texto.length()<<endl;
+				//cout<<texto[8]<<endl;
+				cont_datos = 0
+				aux_texto += texto + "\n"
+			}
+
+			fmt.Println(len(aux_texto))
+			arch.Close()
+
+			bytess := len(aux_texto)
+			var sizebloc float64 = float64(bytess) / float64(64)
+			var entero int = int(math.Round(sizebloc))
+
+			if sizebloc < float64(entero) {
+				entero += 1
+			}
+			fmt.Println(entero)
+			t := time.Now()
+			fecha := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d",
+				t.Year(), t.Month(), t.Day(),
+				t.Hour(), t.Minute(), t.Second())
+			var info string = ""
+			info += "digraph H{\n node [shape=plaintext];\n B [ label=< <TABLE BORDER =\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">\n<TR PORT=\"header\"><TD COLSPAN=\"2\">SUPERBLOQUE</TD></TR>\n"
+			info += "<TR><TD PORT=\"1\">S_FILESYSTEM_TYPE</TD><TD> " + "ext2" + " bytes</TD></TR>\n"
+			info += "<TR><TD PORT=\"2\">S_INODES_COUNT</TD><TD>" + strconv.Itoa(2) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"3\">S_BLOCKS_COUNT</TD><TD>" + strconv.Itoa(entero) + "</TD></TR>\n"
+
+			info += "<TR><TD  PORT=\"4\">S_FREE_BLOCKS_COUNT</TD><TD >" + strconv.Itoa(250-entero) + "</TD></TR>"
+			info += "<TR><TD PORT=\"5\">S_FREE_INODES_COUNT</TD><TD>" + strconv.Itoa(250-2) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"6\">S_MTIME</TD><TD>" + fecha + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"7\">S_MNT_COUNT</TD><TD>" + strconv.Itoa(1) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"8\">S_MAGIC</TD><TD>" + "0xEF53" + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"9\">S_INODE_SIZE</TD><TD>" + strconv.Itoa(250) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"10\">S_BLOCK_SIZE</TD><TD>" + strconv.Itoa(250) + "</TD></TR>\n"
+
+			info += "<TR><TD   PORT=\"11\">S_FIRST_INO</TD><TD  >" + strconv.Itoa(3) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"12\">S_FIRST_BLO</TD><TD>" + strconv.Itoa(entero+1) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"13\">S_BM_INODE_START</TD><TD>" + strconv.Itoa(1) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"14\">S_BM_BLOCK_START</TD><TD>" + strconv.Itoa(1) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"15\">S_INODE_START</TD><TD>" + strconv.Itoa(1) + "</TD></TR>\n"
+			info += "<TR><TD PORT=\"16\">S_BLOCK_START</TD><TD>" + strconv.Itoa(1) + "</TD></TR>\n"
+
+			info += "</TABLE> >];}\n"
+			disco.Close()
+
+			f, err := os.Create("sb.txt")
+			defer f.Close()
+			if err != nil {
+				fmt.Println(">> Error drawing graph!")
+			}
+			file, err := os.Open("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/")
+			defer file.Close()
+			if err != nil {
+				fmt.Println(">> Error reading the file. Try again.")
+				//return
+			}
+
+			f.WriteString(info)
+
+			e := exec.Command("dot", "-Tpng", "sb.txt", "-o", "sb.png")
+			if er := e.Run(); er != nil {
+				fmt.Println(">> Error", er)
+				//return
+			}
+			respuesta = "Reporte SB realizado\\n"
+			respuesta_exec += "Reporte SB realizado\\n"
 		}
 
 	} else {
+		respuesta = "Falta algun parametro en reportes\n"
+		respuesta_exec += "Falta algun parametro en reportes\n"
 		fmt.Println("Falta algun parametro en reportes")
 	}
+	return respuesta
 }
 
 // mostrar
@@ -2511,4 +2729,67 @@ func byte_string2(dato [16]byte) string {
 	}
 
 	return sstring
+}
+
+func crearDirectorioSiNoExiste(directorio string) {
+	if _, err := os.Stat(directorio); os.IsNotExist(err) {
+		err = os.Mkdir(directorio, 0755)
+		if err != nil {
+			// Aquí puedes manejar mejor el error, es un ejemplo
+			panic(err)
+		}
+	}
+}
+
+func exece(commandArray []string) string {
+	respuesta_exec = ""
+	path := ""
+
+	for i := 0; i < len(commandArray); i++ {
+		data := commandArray[i]
+		if strings.Contains(data, "-path=") {
+
+			path = strings.Replace(data, "-path=", "", 1)
+			path = strings.Replace(path, "\"", "", 2)
+		}
+	}
+	//respuesta := ""
+	file, err := os.OpenFile(path, os.O_RDWR, 0660)
+	if err != nil {
+		fmt.Println("es aca")
+		msg_error(err)
+	}
+	var texto string
+	var aux_texto string
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		//contadorlog+=1;
+		texto = scanner.Text()
+		aux_texto += texto
+		split_comando(texto)
+
+		//cout<<contadorlog<<texto<<endl;
+		//cout<<texto.length()<<endl;
+		//cout<<texto[8]<<endl;
+		//cont_datos = 0
+	}
+	//fmt.Println(aux_texto)
+	respuesta_exec = "Ejecucion realizada con exito"
+
+	return respuesta_exec
+}
+
+func pausee() {
+	//respuesta := ""
+	//fmt.Println("Hello world!")
+	fmt.Print("Press 'Enter' to continue...")
+
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+
+	//	return respuesta
+}
+
+func toBase64(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
 }
