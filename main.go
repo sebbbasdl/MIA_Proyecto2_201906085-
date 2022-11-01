@@ -283,6 +283,7 @@ func ejecucion_comando(commandArray []string) string {
 		//mostrar2()
 		//crearDirectorioSiNoExiste("C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/hola/")
 	} else if data == "rep" {
+		reportes(commandArray)
 		respuesta = respuesta_rep
 	} else if data == "exec" {
 		respuesta = exece(commandArray)
@@ -2296,7 +2297,7 @@ func reportes(commandArray []string) {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open(path_actual)
+			file, err := os.Open(path_actual + "mbr.txt")
 
 			defer file.Close()
 			if err != nil {
@@ -2404,7 +2405,7 @@ func reportes(commandArray []string) {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open(path_actual)
+			file, err := os.Open(path_actual + "disk.txt")
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
@@ -2502,7 +2503,7 @@ func reportes(commandArray []string) {
 			if err != nil {
 				fmt.Println(">> Error drawing graph!")
 			}
-			file, err := os.Open(path_actual)
+			file, err := os.Open(path_actual + "sb.txt")
 			defer file.Close()
 			if err != nil {
 				fmt.Println(">> Error reading the file. Try again.")
