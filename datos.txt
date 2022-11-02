@@ -26,7 +26,7 @@ mkfs -id=851disk
 login -usuario=root -password=123 -id=851disk
 mkgrp -name="grupo1"
 mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
-rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
+rep -id=851a -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
 rep -id=851disk -path="MIA_Proyecto2_201906085-/" -name=sb
 rep -id=851disk -path="MIA_Proyecto2_201906085-/" -name=disk
 rmdisk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disk2.dk"

@@ -1,0 +1,92 @@
+#Calificacion MIA 2022 - PROYECTO 2
+
+# --- PARTE 1 ---
+
+#CREACION DE DISCOS
+mkdisk -size=112 -unit=M -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+mkdisk -size=1 -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/eliminar.dk"
+
+pause
+
+#ELIMINACION DE DISCOS
+#Debe de dar error por que no existe disco con ese nombre
+rmdisk -path="/home/ubuntu/a eliminar disco/no_existo.dk"
+
+rmdisk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/eliminar.dk"
+
+pause
+
+#CREACION DE PARTICIONES
+fdisk -tipo=l -unit=m -name=PartX -size=5 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+
+fdisk -tipo=p -unit=m -name=Part1 -size=25 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=p -unit=m -name=Part2 -size=25 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=p -unit=m -name=Part3 -size=25 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=e -unit=m -name=Part4 -size=25 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=L -unit=M -name=Part5 -size=5 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=L -unit=M -name=Part6 -size=5 -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk
+
+pause
+
+#MOUNT CARNET DE EJEMPLO 201709362
+#621a
+mount -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk" -name=part1
+#622a
+mount -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk -name=part2
+#623a
+mount -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disco.dk -name=part3
+
+pause
+
+#REPORTE DISCO
+rep -id=851a -path=C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/particiones/disco.jpg -name=disk
+
+pause
+
+# --- PARTE 2 ---
+
+#MKFS A PARTICIONES
+mkfs -type=fast -id=851a
+
+pause
+
+#INICIO DE SESION
+
+#Debe dar error porque no existe usuario logeado
+logout
+
+login -password=123 -usuario=root -id=851a
+login -password=user1 -usuario=user1 -id=851a
+
+pause
+
+#CREACION DE GRUPOS
+mkgrp -name=archivos
+mkgrp -name=arqui
+mkgrp -name=compi2
+
+pause
+
+#ELIMINACION DE GRUPOS
+rmgrp -name=arqui
+
+pause
+
+#CREACION DE USUARIOS
+mkusr -usuario="user1" -grp=root -pwd=user1
+mkusr -usuario="user2" -grp="compi2" -pwd=user2
+mkusr -usuario="user3" -grp="compi2" -pwd=user3
+
+pause
+
+#ELIMINACION DE USUARIOS
+rmusr -usuario=user1
+
+#REPORTES SUPER BLOQUE
+rep -id=851a -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
+
+pause
+
+logout
+
+pause

@@ -12,35 +12,34 @@ pause
 #Debe de dar error por que no existe disco con ese nombre
 rmdisk -path="/home/ubuntu/a eliminar disco/no_existo.dk"
 
-rmdisk -path="/home/ubuntu/parte1/eliminar.dk"
+rmdisk -path="/home/ubuntu/parte2/eliminar.dk"
 
 pause
 
 #CREACION DE PARTICIONES
-#Debe dar error por que no existe particion extendida
-fdisk -type=L -unit=M -name=PartX -size=5 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=l -unit=m -name=PartX -size=5 -path=/home/ubuntu/parte2/disco.dk
 
-fdisk -type=P -unit=M -name=Part1 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -type=P -unit=M -name=Part2 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -type=P -unit=M -name=Part3 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -type=E -unit=M -name=Part4 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -type=L -unit=M -name=Part5 -size=5 -path=/home/ubuntu/parte2/disco.dk
-fdisk -type=L -unit=M -name=Part6 -size=5 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=p -unit=m -name=Part1 -size=25 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=p -unit=m -name=Part2 -size=25 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=p -unit=m -name=Part3 -size=25 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=e -unit=m -name=Part4 -size=25 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=L -unit=M -name=Part5 -size=5 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=L -unit=M -name=Part6 -size=5 -path=/home/ubuntu/parte2/disco.dk
 
 pause
 
 #MOUNT CARNET DE EJEMPLO 201709362
 #621a
-mount -path=/home/ubuntu/parte2/disco.dk -name=Part1
+mount -path="/home/ubuntu/parte2/disco.dk" -name=part1
 #622a
-mount -path=/home/ubuntu/parte2/disco.dk -name=Part2
+mount -path=/home/ubuntu/parte2/disco.dk -name=part2
 #623a
-mount -path=/home/ubuntu/parte2/disco.dk -name=Part3
+mount -path=/home/ubuntu/parte2/disco.dk -name=part3
 
 pause
 
 #REPORTE DISCO
-rep -id=851a -Path=/home/ubuntu/parte1/particiones/disco.jpg -name=disk
+rep -id=851a -path=/home/ubuntu/parte2/particiones/disco.jpg -name=disk
 
 pause
 
@@ -51,101 +50,40 @@ mkfs -type=fast -id=851a
 
 pause
 
-#REPORTES INICIALES
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_1.pdf" -name=tree
-
-pause
-
 #INICIO DE SESION
-#Debe dar error porque no existe el usuario roca
-Login -password=567 -usuario=roca -id=851a
 
 #Debe dar error porque no existe usuario logeado
 logout
 
-Login -password=123 -usuario=root -id=851a
+login -password=123 -usuario=root -id=851a
+login -password=user1 -usuario=user1 -id=851a
 
 pause
 
 #CREACION DE GRUPOS
-mkgrp -naMe=Archivos
-mkgrp -NamE=Arqui
-mkgrp -name="Compi 2"
+mkgrp -name=archivos
+mkgrp -name=arqui
+mkgrp -name=compi2
 
 pause
 
 #ELIMINACION DE GRUPOS
-rmgrp -name=Arqui
-
-pause
-
-#REPORTES FILE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_1.txt" -ruta="/users.txt" -name=file
+rmgrp -name=arqui
 
 pause
 
 #CREACION DE USUARIOS
-Mkusr -usuario="user1" -grp=root -pwd=user1
-Mkusr -usuario="user2" -grp="Compi 2" -pwd=user2
-Mkusr -usuario="user3" -grp="Compi 2" -pwd=user3
+mkusr -usuario="user1" -grp=root -pwd=user1
+mkusr -usuario="user2" -grp="compi2" -pwd=user2
+mkusr -usuario="user3" -grp="compi2" -pwd=user3
 
 pause
 
 #ELIMINACION DE USUARIOS
-rmusr -usuario=user3
-
-pause
-
-#REPORTES FILE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_2.txt" -ruta="/users.txt" -name=file
-
-pause
-
-#CREACION DE CARPETAS
-Mkdir -P -path=/home/ubuntu/archivos/mia/fase2
-Mkdir -P -path=/home/ubuntu/archivos/mia/carpeta2
-Mkdir -P -path=/home/ubuntu/archivos/mia/z
-Mkdir -path=/home/ubuntu/archivos/mia/carpeta2/a1
-Mkdir -path=/home/ubuntu/archivos/mia/carpeta2/a2
-Mkdir -path=/home/ubuntu/archivos/mia/carpeta2/a3
-
-pause
-
-#REPORTES TREE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_2.pdf" -name=tree
-
-pause
-
-#CREACION DE ARCHIVOS
-mkfile -path="/home/ubuntu/b1.txt" -size=15
-mkfile -path="/home/ubuntu/b2.txt" -size=15
-mkfile -path="/home/ubuntu/b3.txt" -size=15
-
-#Debe dar error ruta no existe
-mkfile -path="/home/ubuntu/Noexiste/c1.txt" -size=25
-
-#Debe dar error size negativo
-mkfile -path="/home/ubuntu/d1.txt" -size=-25
-
-pause
-
-#REPORTES TREE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_3.pdf" -name=tree
-
-pause
-
-mkfile -cont="/home/ubuntu/entrada.txt" -path="/home/ubuntu/bcont.txt"
-
-pause
-
-#REPORTES TREE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_4.pdf" -name=tree
-
-#REPORTES FILE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_3.txt" -ruta="/home/ubuntu/entrada.txt" -name=file
+rmusr -usuario=user1
 
 #REPORTES SUPER BLOQUE
-rep -id=851a -Path="/home/ubuntu/parte2/reportes/SB_1.pdf" -name=sb
+rep -id=851a -path="/home/ubuntu/parte2/" -name=mbr
 
 pause
 

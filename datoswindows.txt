@@ -1,10 +1,10 @@
 mkdisk -size=15 -unit="m" -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disk.dk"
 fdisk -size=1 -unit=m -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disk.dk" -tipo=p -fit=ff -name=hola1
 mount -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/disk.dk" -name=hola1
-mkfs -id=851disk
-login -usuario=root -password=123 -id=851disk
+mkfs -id=851a
+login -usuario=root -password=123 -id=851a
 mkgrp -name="grupo1"
 mkusr -usuario=usuario1 -pwd=321 -grp=grupo1
-rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
-rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=disk
-rep -id=851disk -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=sb
+rep -id=851a -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=mbr
+rep -id=851a -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=disk
+rep -id=851a -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/" -name=sb

@@ -122,6 +122,7 @@ func main() {
 
 	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datoswindows.txt"
 	//exec -path="/home/ubuntu/MIA_Proyecto2_201906085-/archivop2.txt"
+	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/archivop2windows.txt"
 }
 
 func msg_error(err error) {
@@ -261,11 +262,18 @@ func ejecucion_comando(commandArray []string) string {
 	} else if data == "login" {
 		respuesta = login(commandArray)
 	} else if data == "logout" {
-		activa = false
-		usuario_actual = ""
-		path_actual = ""
-		fmt.Println("Usted ha cerrado sesion")
-		respuesta = "Usted ha cerrado sesion"
+
+		if activa == false {
+			fmt.Println("No hay sesion activa por lo que no se puede realizar logout")
+			respuesta = "No hay sesion activa por lo que no se puede realizar logout"
+		} else {
+			activa = false
+			usuario_actual = ""
+			path_actual = ""
+			fmt.Println("Usted ha cerrado sesion")
+			respuesta = "Usted ha cerrado sesion"
+
+		}
 
 	} else if data == "mkgrp" {
 		respuesta = mkgrp(commandArray)
@@ -544,7 +552,7 @@ func crear_particion(commandArray []string) string {
 			}
 		}
 		disco.Close()*/
-
+	fit = "ff"
 	disco, err := os.OpenFile(path, os.O_RDWR, 0660)
 	if err != nil {
 		msg_error(err)
@@ -1040,6 +1048,7 @@ func mount_particion(commandArray []string) string {
 				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
+				path_actual = path_sin_disco(path_mount)
 
 				contadorMount += 1
 				arregloletra[contadorDiscos1] = "a"
@@ -1056,6 +1065,7 @@ func mount_particion(commandArray []string) string {
 				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
+				path_actual = path_sin_disco(path_mount)
 				contadorMount += 1
 				arregloletra[contadorDiscos1] = "a"
 				contadorDiscos1 += 1
@@ -1071,6 +1081,7 @@ func mount_particion(commandArray []string) string {
 				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
+				path_actual = path_sin_disco(path_mount)
 				contadorMount += 1
 				arregloletra[contadorDiscos1] = "a"
 				contadorDiscos1 += 1
@@ -1086,6 +1097,7 @@ func mount_particion(commandArray []string) string {
 				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
+				path_actual = path_sin_disco(path_mount)
 				contadorMount += 1
 				arregloletra[contadorDiscos1] = "a"
 				contadorDiscos1 += 1
@@ -1132,6 +1144,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = arregloletra[auxlugar]
 						contadorMount += 1
 
@@ -1150,6 +1163,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = arregloletra[auxlugar]
 						contadorMount += 1
 
@@ -1168,6 +1182,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = arregloletra[auxlugar]
 						contadorMount += 1
 
@@ -1186,6 +1201,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = arregloletra[auxlugar]
 						contadorMount += 1
 
@@ -1209,7 +1225,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
-
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = abecedario(contadorDiscos1)
 						contadorMount += 1
 						contadorDiscos1 += 1
@@ -1228,7 +1244,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
-
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = abecedario(contadorDiscos1)
 						contadorMount += 1
 						contadorDiscos1 += 1
@@ -1247,7 +1263,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
-
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = abecedario(contadorDiscos1)
 						contadorMount += 1
 						contadorDiscos1 += 1
@@ -1266,7 +1282,7 @@ func mount_particion(commandArray []string) string {
 						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
-
+						path_actual = path_sin_disco(path_mount)
 						arregloletra[contadorMount] = abecedario(contadorDiscos1)
 						contadorMount += 1
 						contadorDiscos1 += 1
@@ -1678,7 +1694,7 @@ func rmgrp(commandArray []string) string {
 	}
 
 	if flag_name == true {
-		fmt.Println("mkgrp")
+		fmt.Println("rmgrp")
 		fmt.Println(name)
 
 		var datos [5]string
@@ -1745,8 +1761,9 @@ func rmgrp(commandArray []string) string {
 						}
 
 						flag = true
+
 					} else {
-						flag = false
+						//flag = false
 						id_grupo, err = strconv.Atoi(datos[0])
 						if err != nil {
 							//	fmt.Println("es aca")
@@ -1767,9 +1784,9 @@ func rmgrp(commandArray []string) string {
 				msg_error(err)
 				fmt.Println("h0")
 			}
-
+			fmt.Println(flag)
 			if flag == true {
-
+				fmt.Println(aux_texto)
 				_, err = file2.WriteString(aux_texto)
 				if err != nil {
 					//	fmt.Println("es aca")
@@ -2045,7 +2062,7 @@ func rmusr(commandArray []string) string {
 
 						flag = true
 					} else {
-						flag = false
+						//flag = false
 						id_grupo, err = strconv.Atoi(datos[0])
 						if err != nil {
 							//	fmt.Println("es aca")
@@ -2685,6 +2702,7 @@ func byte_to_string4(ejm MBR) string {
 func path_sin_disco(path string) string {
 	var lugar int = 0
 	var path2 string = ""
+	fmt.Println("pathsin" + path)
 	for i := 0; i < len(path); i++ {
 		if path[i] == '/' {
 			lugar = i
