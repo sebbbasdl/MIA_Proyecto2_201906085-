@@ -121,6 +121,7 @@ func main() {
 	//analizar()
 
 	//exec -path="C:/Users/sebas/go/src/MIA_Proyecto2_201906085-/datoswindows.txt"
+	//exec -path="/home/ubuntu/MIA_Proyecto2_201906085-/archivop2.txt"
 }
 
 func msg_error(err error) {
@@ -1036,7 +1037,7 @@ func mount_particion(commandArray []string) string {
 				//cout<<"entre"<<endl;
 				copy(ejm.Mbr_partition_1.Part_status[:], "1")
 				//cout<<"-------------------"<<contadorDiscos1<<endl;
-				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
 
@@ -1052,7 +1053,7 @@ func mount_particion(commandArray []string) string {
 
 			} else if ejm.Mbr_partition_2.Part_name == auxx0 {
 				copy(ejm.Mbr_partition_2.Part_status[:], "1")
-				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
 				contadorMount += 1
@@ -1067,7 +1068,7 @@ func mount_particion(commandArray []string) string {
 
 			} else if ejm.Mbr_partition_3.Part_name == auxx0 {
 				copy(ejm.Mbr_partition_3.Part_status[:], "1")
-				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
 				contadorMount += 1
@@ -1082,7 +1083,7 @@ func mount_particion(commandArray []string) string {
 
 			} else if ejm.Mbr_partition_4.Part_name == auxx0 {
 				copy(ejm.Mbr_partition_4.Part_status[:], "1")
-				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+				arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 				arregloMountPart[contadorMount] = string(auxx0[:])
 				arregloMountPath[contadorMount] = path_mount
 				contadorMount += 1
@@ -1128,7 +1129,7 @@ func mount_particion(commandArray []string) string {
 						//cout << "mori3" << endl
 						copy(ejm.Mbr_partition_1.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 						arregloletra[contadorMount] = arregloletra[auxlugar]
@@ -1146,7 +1147,7 @@ func mount_particion(commandArray []string) string {
 						//cout << "mori3" << endl
 						copy(ejm.Mbr_partition_2.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 						arregloletra[contadorMount] = arregloletra[auxlugar]
@@ -1164,7 +1165,7 @@ func mount_particion(commandArray []string) string {
 						//cout << "mori3" << endl
 						copy(ejm.Mbr_partition_3.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 						arregloletra[contadorMount] = arregloletra[auxlugar]
@@ -1182,7 +1183,7 @@ func mount_particion(commandArray []string) string {
 						//cout << "mori3" << endl
 						copy(ejm.Mbr_partition_4.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 						arregloletra[contadorMount] = arregloletra[auxlugar]
@@ -1205,7 +1206,7 @@ func mount_particion(commandArray []string) string {
 
 						copy(ejm.Mbr_partition_1.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 
@@ -1224,7 +1225,7 @@ func mount_particion(commandArray []string) string {
 					} else if ejm.Mbr_partition_2.Part_name == auxx0 {
 						copy(ejm.Mbr_partition_2.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 
@@ -1243,7 +1244,7 @@ func mount_particion(commandArray []string) string {
 					} else if ejm.Mbr_partition_3.Part_name == auxx0 {
 						copy(ejm.Mbr_partition_3.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 
@@ -1262,7 +1263,7 @@ func mount_particion(commandArray []string) string {
 					} else if ejm.Mbr_partition_4.Part_name == auxx0 {
 						copy(ejm.Mbr_partition_4.Part_status[:], "1")
 
-						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + nombredisco
+						arregloMountId[contadorMount] = "85" + strconv.Itoa(contadorMount+1) + "a"
 						arregloMountPart[contadorMount] = string(auxx0[:])
 						arregloMountPath[contadorMount] = path_mount
 

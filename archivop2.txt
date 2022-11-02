@@ -40,30 +40,30 @@ mount -path=/home/ubuntu/parte2/disco.dk -name=Part3
 pause
 
 #REPORTE DISCO
-rep -id=621a -Path=/home/ubuntu/parte1/particiones/disco.jpg -name=disk
+rep -id=851a -Path=/home/ubuntu/parte1/particiones/disco.jpg -name=disk
 
 pause
 
 # --- PARTE 2 ---
 
 #MKFS A PARTICIONES
-mkfs -type=fast -id=621a
+mkfs -type=fast -id=851a
 
 pause
 
 #REPORTES INICIALES
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/tree_1.pdf" -name=tree
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_1.pdf" -name=tree
 
 pause
 
 #INICIO DE SESION
 #Debe dar error porque no existe el usuario roca
-Login -password=567 -usuario=roca -id=621a
+Login -password=567 -usuario=roca -id=851a
 
 #Debe dar error porque no existe usuario logeado
 logout
 
-Login -password=123 -usuario=root -id=621a
+Login -password=123 -usuario=root -id=851a
 
 pause
 
@@ -80,7 +80,7 @@ rmgrp -name=Arqui
 pause
 
 #REPORTES FILE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/users_1.txt" -ruta="/users.txt" -name=file
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_1.txt" -ruta="/users.txt" -name=file
 
 pause
 
@@ -97,7 +97,7 @@ rmusr -usuario=user3
 pause
 
 #REPORTES FILE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/users_2.txt" -ruta="/users.txt" -name=file
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_2.txt" -ruta="/users.txt" -name=file
 
 pause
 
@@ -112,7 +112,7 @@ Mkdir -path=/home/ubuntu/archivos/mia/carpeta2/a3
 pause
 
 #REPORTES TREE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/tree_2.pdf" -name=tree
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_2.pdf" -name=tree
 
 pause
 
@@ -130,7 +130,7 @@ mkfile -path="/home/ubuntu/d1.txt" -size=-25
 pause
 
 #REPORTES TREE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/tree_3.pdf" -name=tree
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_3.pdf" -name=tree
 
 pause
 
@@ -139,13 +139,13 @@ mkfile -cont="/home/ubuntu/entrada.txt" -path="/home/ubuntu/bcont.txt"
 pause
 
 #REPORTES TREE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/tree_4.pdf" -name=tree
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/tree_4.pdf" -name=tree
 
 #REPORTES FILE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/users_3.txt" -ruta="/home/ubuntu/entrada.txt" -name=file
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/users_3.txt" -ruta="/home/ubuntu/entrada.txt" -name=file
 
 #REPORTES SUPER BLOQUE
-rep -id=621a -Path="/home/ubuntu/parte2/reportes/SB_1.pdf" -name=sb
+rep -id=851a -Path="/home/ubuntu/parte2/reportes/SB_1.pdf" -name=sb
 
 pause
 
