@@ -39,7 +39,7 @@ mount -path=/home/ubuntu/parte2/disco.dk -name=part3
 pause
 
 #REPORTE DISCO
-rep -id=851a -path=/home/ubuntu/parte2/particiones/disco.jpg -name=disk
+rep -id=851a -path=/home/ubuntu/parte2/ -name=disk
 
 pause
 
@@ -83,7 +83,7 @@ pause
 rmusr -usuario=user1
 
 #REPORTES SUPER BLOQUE
-rep -id=851a -path="/home/ubuntu/parte2/" -name=mbr
+rep -id=851a -path="/home/ubuntu/parte2/" -name=sb
 
 pause
 
