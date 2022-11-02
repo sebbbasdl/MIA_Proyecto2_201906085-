@@ -21,17 +21,17 @@ export class EjemploService {
     console.log("**********************")
 
 
-    return this.httpClient.post("http://localhost:5000/analizar",{ Cmd: entrada});
+    return this.httpClient.post("http://52.14.179.229:5000/analizar",{ Cmd: entrada});
   }
 
   getReporte(){
     console.log("REPORTE")
-    return this.httpClient.get("http://localhost:5000/reportes");
+    return this.httpClient.get("http://52.14.179.229:5000/reportes");
   }
   getReporte2(){
-    return this.httpClient.get("http://localhost:5000/reportes2");
+    return this.httpClient.get("http://52.14.179.229:5000/reportes2");
   }
   getReporte3(){
-    return this.httpClient.get("http://localhost:5000/reportes3");
+    return this.httpClient.get("http://52.14.179.229:5000/reportes3");
   }
 }

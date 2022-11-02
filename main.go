@@ -351,7 +351,7 @@ func crear_disco(commandArray []string) string {
 
 	// Creacion, escritura y cierre de archivo
 	//crearDirectorioSiNoExiste(path_mkdisk)
-
+	crearDirectorioSiNoExiste(path_sin_disco(path_mkdisk))
 	if flag_path == true && flag_size == true {
 		disco, err := os.Create(path_mkdisk)
 
@@ -2197,7 +2197,7 @@ func reportes(commandArray []string) {
 	}
 
 	if flag_id == true && flag_name == true && flag_path == true {
-		//crearDirectorioSiNoExiste(path_sin_disco(path))
+		crearDirectorioSiNoExiste(path_sin_disco(path))
 		fmt.Println("Rep:")
 		fmt.Println(id)
 		fmt.Println(path)
