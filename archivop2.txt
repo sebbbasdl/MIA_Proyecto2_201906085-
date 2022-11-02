@@ -3,7 +3,7 @@
 # --- PARTE 1 ---
 
 #CREACION DE DISCOS
-mkdisk -size=112 -unit=M -path=/home/ubuntu/parte2/disco.dk
+mkdisk -size=112 -unit=M -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
 mkdisk -size=1 -path="/home/ubuntu/parte1/eliminar.dk"
 
 pause
@@ -12,34 +12,34 @@ pause
 #Debe de dar error por que no existe disco con ese nombre
 rmdisk -path="/home/ubuntu/a eliminar disco/no_existo.dk"
 
-rmdisk -path="/home/ubuntu/parte2/eliminar.dk"
+rmdisk -path="/home/ubuntu/MIA_Proyecto2_201906085-/eliminar.dk"
 
 pause
 
 #CREACION DE PARTICIONES
-fdisk -tipo=l -unit=m -name=PartX -size=5 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=l -unit=m -name=PartX -size=5 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
 
-fdisk -tipo=p -unit=m -name=Part1 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -tipo=p -unit=m -name=Part2 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -tipo=p -unit=m -name=Part3 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -tipo=e -unit=m -name=Part4 -size=25 -path=/home/ubuntu/parte2/disco.dk
-fdisk -tipo=L -unit=M -name=Part5 -size=5 -path=/home/ubuntu/parte2/disco.dk
-fdisk -tipo=L -unit=M -name=Part6 -size=5 -path=/home/ubuntu/parte2/disco.dk
+fdisk -tipo=p -unit=m -name=Part1 -size=25 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=p -unit=m -name=Part2 -size=25 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=p -unit=m -name=Part3 -size=25 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=e -unit=m -name=Part4 -size=25 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=L -unit=M -name=Part5 -size=5 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
+fdisk -tipo=L -unit=M -name=Part6 -size=5 -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk
 
 pause
 
 #MOUNT CARNET DE EJEMPLO 201709362
 #621a
-mount -path="/home/ubuntu/parte2/disco.dk" -name=part1
+mount -path="/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk" -name=part1
 #622a
-mount -path=/home/ubuntu/parte2/disco.dk -name=part2
+mount -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk -name=part2
 #623a
-mount -path=/home/ubuntu/parte2/disco.dk -name=part3
+mount -path=/home/ubuntu/MIA_Proyecto2_201906085-/disco.dk -name=part3
 
 pause
 
 #REPORTE DISCO
-rep -id=851a -path=/home/ubuntu/parte2/ -name=disk
+rep -id=851a -path=/home/ubuntu/MIA_Proyecto2_201906085-/ -name=disk
 
 pause
 
@@ -56,7 +56,6 @@ pause
 logout
 
 login -password=123 -usuario=root -id=851a
-login -password=user1 -usuario=user1 -id=851a
 
 pause
 
@@ -83,7 +82,7 @@ pause
 rmusr -usuario=user1
 
 #REPORTES SUPER BLOQUE
-rep -id=851a -path="/home/ubuntu/parte2/" -name=sb
+rep -id=851a -path="/home/ubuntu/MIA_Proyecto2_201906085-/" -name=sb
 
 pause
 

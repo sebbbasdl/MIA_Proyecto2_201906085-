@@ -56,7 +56,6 @@ pause
 logout
 
 login -password=123 -usuario=root -id=851a
-login -password=user1 -usuario=user1 -id=851a
 
 pause
 
